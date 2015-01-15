@@ -1,19 +1,19 @@
 require './exception.rb'
-require './user.rb'
+require './player.rb'
 class Sudoku
   # Hash for storing the blank spaces
   @@hash = Hash.new
   #initializes Game
   def initialize
-  @sudoku = [[2, 8, " ", " ", 9, 7, 3, " ", " "],
-                    [4 , " ", 7, " ", 3, " ", 8, " ", " "],
-                    [" ", 3, 5, " ", " ",8, " ", " ", 6],
-                    [" ", " ", " ", " ", 1, 3, " ", 8, " "],
-                    [8 , " ", 1, " ", " ", " ", 5," ", 7],
-                    [" ", 5, " ", 7, 8, " ", " ", " ", " "],
-                    [3, " ", " ", 8, " ", " ", 7, 2, " "],
-                    [" ", " ", 8, " ", 2, " ", 4, " ", 3],
-                    [" ", " ", 4, 3, 7, " ", " ",5, 8]]
+    @sudoku = [[2, 8, " ", " ", 9, 7, 3, " ", " "],
+               [4 , " ", 7, " ", 3, " ", 8, " ", " "],
+               [" ", 3, 5, " ", " ",8, " ", " ", 6],
+               [" ", " ", " ", " ", 1, 3, " ", 8, " "],
+               [8 , " ", 1, " ", " ", " ", 5," ", 7],
+               [" ", 5, " ", 7, 8, " ", " ", " ", " "],
+               [3, " ", " ", 8, " ", " ", 7, 2, " "],
+               [" ", " ", 8, " ", 2, " ", 4, " ", 3],
+               [" ", " ", 4, 3, 7, " ", " ",5, 8]]
     @sudoku.each_index do |row|
       @sudoku[row].each_index do |col|
         @@hash["#{ row } #{ col }"] = "" if(@sudoku[row][col] == " ")
@@ -21,13 +21,13 @@ class Sudoku
     end
   end
 
-  def play(user)
+  def play(player)
     while(true)
       display_sudoku
-      user_value = user.input_row_column
-      break if user_value.eql? "q"
-      row,col = user_value
-      value = user.input_value
+      player_value = player.input_row_column
+      break if player_value.eql? "q"
+      row,col = player_value
+      value = player.input_value
       if validate(row, col, value)
         update_sudoku(row, col, value)
       else
@@ -35,21 +35,21 @@ class Sudoku
       end
     end
     if(sudoku_not_filled?)
-      puts "Thank you have a nice day"
+      puts "Thank you have a nice day #{player.name}"
     else
-      puts "You have completed the game"
+      puts "You have completed the game #{player.name}"
     end
   end
 
-  def self.is_system_grid?(user_row, user_col)    # checks whether user is modifying system generated grid value
-    return !(@@hash.key? "#{user_row} #{user_col}")
+  def self.is_system_grid?(player_row, player_col)    # checks whether player is modifying system generated grid value
+    return !(@@hash.key? "#{player_row} #{player_col}")
   end
 
   #Checks whether game  completed
   def sudoku_not_filled?
     flg = false
     @sudoku.each do |row|
-      flg = true if row.count(" ") != 0
+      flg = true if row.include? " "
     end
     flg
   end
@@ -62,7 +62,7 @@ class Sudoku
 
   def display_sudoku
     @sudoku.each_index do |row|
-          @sudoku[row].each_index do |col|
+      @sudoku[row].each_index do |col|
         print @sudoku[row][col]
         print "|" if col % 3 == 2
         print "  "
@@ -81,11 +81,11 @@ class Sudoku
   end
 
   def col_wise_repeat(row, col, value)
-   if @sudoku.transpose[col].include? value
-     true
-   else
-     false
-   end
+    if @sudoku.transpose[col].include? value
+      true
+    else
+      false
+    end
   end
 
   def block_wise_repeat(row, col, value)
@@ -106,24 +106,26 @@ end
     (0..3).each do |row|
       array2d[row+inr] =  array1d.rotate!(3)
     end
-  =end
+=end
 
 
 =begin
 class Start_game
   def initialize()
     sudoku = Sudoku.new
-    user = User.new
-    sudoku.play(user)
+    player = Player.new
+    sudoku.play(player)
   end
 end
 Start_game.new
 =end
-
+puts "Hi please Enter Your name"
+name = gets.chomp 
+puts "welcome #{name}"
 sudoku = Sudoku.new
-user = User.new
-sudoku.play(user)
+player = Player.new name
+sudoku.play(player)
 
 puts "playing second  time:"
 sudoku1 = Sudoku.new
-sudoku1.play(user)
+sudoku1.play(player)

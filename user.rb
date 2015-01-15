@@ -1,6 +1,10 @@
-class User
+class Player
 
-  # user input for row and column
+  attr_reader :name
+  def initialize name
+    @name = name
+  end
+  # player input for row and column
   def input_row_column
     puts "Input row and Column Seprated by spaces:press q to quit"
     input1 = gets.chomp
@@ -8,14 +12,14 @@ class User
       return input1
     end
     input = input1.split(" ")
-    user_row = input[0].to_i - 1
-    user_col = input[1].to_i - 1
-    unless(row_col_validated(user_row, user_col)) # row column is invalid then raise Exception
+    player_row = input[0].to_i - 1
+    player_col = input[1].to_i - 1
+    unless(row_col_validated(player_row, player_col)) # row column is invalid then raise Exception
       raise(InvalidRowColumnError,"Exception:Invalid row or column")
     end
-    #user is trying to modify the System generated grid
-    raise(SystemGridError, "Exception:System generated grid") if Sudoku.is_system_grid?(user_row, user_col)
-    return user_row, user_col
+    #player is trying to modify the System generated grid
+    raise(SystemGridError, "Exception:System generated grid") if Sudoku.is_system_grid?(player_row, player_col)
+    return player_row, player_col
   rescue InvalidRowColumnError => e
     puts e.message
     retry
@@ -36,7 +40,7 @@ class User
 
   private
 
-  def row_col_validated(user_row, user_col)
-    return (user_row.between?(0, 8) && user_col.between?(0, 8)) ? true : false
+  def row_col_validated(player_row, player_col)
+    return (player_row.between?(0, 8) && player_col.between?(0, 8)) ? true : false
   end
 end
