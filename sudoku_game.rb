@@ -61,12 +61,14 @@ class Sudoku
   end
 
   def display_sudoku
-    @sudoku.each do |row|
-      row.each do |value|
-        print value
+    @sudoku.each_index do |row|
+          @sudoku[row].each_index do |col|
+        print @sudoku[row][col]
+        print "|" if col % 3 == 2
         print "  "
       end
       puts
+      puts "-----------------------------" if row % 3 == 2
     end
   end
 
@@ -79,7 +81,7 @@ class Sudoku
   end
 
   def col_wise_repeat(row, col, value)
-   if @sudoku.transpose[col].include? value 
+   if @sudoku.transpose[col].include? value
      true
    else
      false
@@ -95,7 +97,6 @@ class Sudoku
   def validate(row, col, value)
     (!row_wise_repeat(row,col,value) && !col_wise_repeat(row,col,value) && !block_wise_repeat(row,col,value)) ? true : false
   end
-  
 end
 =begin
   def generate_sudoku
